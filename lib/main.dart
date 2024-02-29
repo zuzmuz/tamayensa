@@ -1,27 +1,39 @@
 import 'package:flutter/material.dart';
 import 'utils/app_colors.dart';
 
-
 void main() {
-    runApp(const MyApp());
+    runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-    const MyApp({super.key});
+
+    final List<String> items = List<String>.generate(10000, (i) => 'Item $i');
+
+    MyApp({super.key});
 
     // This widget is the root of your application.
     @override
-        Widget build(BuildContext context) {
-            return const MaterialApp(
-                    home: Scaffold(
-                        backgroundColor: AppColor.backgroundColor,
-                        body: Center(
-                            child: Text(
-                                'Hala Rayyis', style: TextStyle(color: AppColor.foregroundColor, fontSize: 30.0)
-                                )
-                            )
-                        )
+    Widget build(BuildContext context) {
+        return MaterialApp(
+            home: Scaffold(
+                backgroundColor: AppColor.background,
+                body: ListView.builder(itemCount: items.length, itemBuilder: (context, index) {
+                    return ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColor.line,
+                            foregroundColor: AppColor.foreground,
+                            shadowColor: AppColor.foreground,
+                            elevation: 5,
+                            textStyle: const TextStyle(fontSize: 20),
+                            padding: const EdgeInsets.all(10),
+                        ),
+                        onPressed: () {
+                            print('Button $index pressed');
+                        },
+                        child: Text(items[index], style: const TextStyle(color: AppColor.foreground)),
                     );
-        }
+                }),
+            )
+        );
+    }
 }
-
