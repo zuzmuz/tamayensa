@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'pages/gate_page.dart';
-import 'pages/vault_page.dart';
 import 'utils/app_theme.dart';
 
 void main() {
@@ -16,11 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: appTheme,
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-      routes: {
-        '/': (context) => GatePage(),
-        '/vault': (context) => VaultPage(),
-      },
+      home:  const GatePage(),
     );
   }
 }

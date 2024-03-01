@@ -1,47 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:tamayensa/models/vault.dart';
+import 'package:tamayensa/pages/vault_page.dart';
+import 'router.dart';
 import '../utils/app_theme.dart';
 
-class GatePage extends StatelessWidget {
-  final List<Vault> vaults = [
-    Vault(name: 'Personal', capsules: [], password: '1234'),
-    Vault(name: 'Work', capsules: [], password: '5678'),
-  ];
-
-  GatePage({super.key});
+class GatePage extends CustomPage {
+  const GatePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        theme: appTheme,
-        home: Scaffold(
-          appBar:
-              AppBar(title: const Text('Vaults'), centerTitle: true, actions: [
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                print('Menu button pressed');
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.settings),
-              onPressed: () {
-                print('Settings button pressed');
-              },
-            ),
-          ]),
-          body: ListView.builder(
-              itemCount: vaults.length,
-              itemBuilder: (context, index) {
-                return TextButton(
-                  onPressed: () {
-                    print('Button $index pressed');
-                  },
-                  child: Text(vaults[index].name,
-                      style: const TextStyle(color: AppColor.foreground)),
-                );
-              }),
-        ));
+    return Scaffold(
+        appBar:
+            AppBar(title: const Text('Vaults'), centerTitle: true, actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              print('Menu button pressed');
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              print('Settings button pressed');
+            },
+          ),
+        ]),
+        body: ListView.builder(
+            itemCount: vaults.length,
+            itemBuilder: (context, index) {
+              return TextButton(
+                onPressed: () {
+                  context.toPage(() => VaultPage(vault: vaults[index]));
+                },
+                child: Text(vaults[index].name,
+                    style: const TextStyle(color: AppColor.foreground)),
+              );
+            }));
   }
 }
 
