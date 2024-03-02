@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tamayensa/pages/router.dart';
+import 'capsule_page.dart';
 import '../models/model.dart';
-import '../utils/app_theme.dart';
 
 class VaultPage extends StatelessWidget {
   final Vault vault;
@@ -18,23 +18,22 @@ class VaultPage extends StatelessWidget {
             context.back();
           },
         ),
-        title: Text('Vault ${vault.name}'),
+        title: Text(vault.name),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () {
-              print('Menu button pressed');
-            },
+            onPressed: () {},
           )
         ],
       ),
       body: ListView.builder(
         itemCount: vault.capsules.length,
         itemBuilder: (context, index) {
-          return TextButton(
-            onPressed: () {},
-            child: Text(vault.capsules[index].name,
-                style: const TextStyle(color: AppColor.foreground)),
+          return ListTile(
+            title: Text(vault.capsules[index].name),
+            onTap: () {
+              context.toPage(() => CapsulePage(capsule: vault.capsules[index]));
+            },
           );
         },
       ),

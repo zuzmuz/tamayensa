@@ -1,12 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:tamayensa/models/model.dart';
 import 'dart:async';
-import 'package:tamayensa/pages/vault_page.dart';
+import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:tamayensa/models/model.dart';
+import 'vault_page.dart';
 import 'router.dart';
-import '../utils/app_theme.dart';
+
+final _logger = Logger();
 
 class GatePage extends StatefulWidget {
   const GatePage({super.key});
+    
 
   @override
   GatePageState createState() => GatePageState();
@@ -25,7 +28,6 @@ class GatePageState extends State<GatePage> {
 
   @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).size);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Vaults'),
@@ -34,13 +36,11 @@ class GatePageState extends State<GatePage> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              print('Menu button pressed');
             },
           ),
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              print('Settings button pressed');
             },
           ),
         ],
@@ -56,7 +56,7 @@ class GatePageState extends State<GatePage> {
               });
             },
             trailing: _focusedIndex == index
-                ? Container(
+                ? SizedBox(
                     width: 200,
                     child: TextField(
                       autofocus: true,
