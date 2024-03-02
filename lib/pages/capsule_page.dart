@@ -1,17 +1,22 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:logger/logger.dart';
 import 'package:tamayensa/models/model.dart';
+import 'secret_widget.dart';
 import 'router.dart';
 
-final Logger _logger = Logger();
-
-class CapsulePage extends StatelessWidget {
+class CapsulePage extends StatefulWidget {
   final Capsule capsule;
 
   const CapsulePage({super.key, required this.capsule});
+
+  @override
+  CapsulePageState createState() => CapsulePageState();
+}
+
+class CapsulePageState extends State<CapsulePage> {
+  Capsule get capsule => widget.capsule;
+  bool _isDirty = false;
+
+  CapsulePageState();
 
   @override
   Widget build(BuildContext context) {
@@ -27,38 +32,20 @@ class CapsulePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                capsule.secrets.add(
+                  Secret(title: "wala", value: "zala", isHidden: false),
+                );
+              });
+            },
           )
         ],
       ),
       body: ListView.builder(
         itemCount: capsule.secrets.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Row(children: [
-              Expanded(
-                child: Text(capsule.secrets[index].title),
-              ),
-              Expanded(
-                child: capsule.secrets[index].isHidden
-                    ? const Text('••••')
-                    : Text(capsule.secrets[index].value),
-              ),
-            ]),
-            trailing: IconButton(
-              icon: const Icon(Icons.copy),
-              onPressed: () {
-                _logger.d('Copying to clipboard');
-                Clipboard.setData(
-                  ClipboardData(text: capsule.secrets[index].value),
-                );
-                Timer(const Duration(seconds: 5), () {
-                  _logger.d('Clipboard cleared');
-                  Clipboard.setData(const ClipboardData(text: ''));
-                });
-              },
-            ),
-          );
+          return SecretWidget(secret: capsule.secrets[index]);
         },
       ),
     );
