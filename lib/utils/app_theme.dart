@@ -15,14 +15,14 @@ class AppColor {
 
 final ThemeData appTheme = ThemeData(
   colorScheme: const ColorScheme.dark(
-    primary: AppColor.background,
+    primary: AppColor.foreground,
     onPrimary: AppColor.green,
     secondary: AppColor.background,
-    onSecondary: AppColor.yellow,
+    onSecondary: AppColor.green,
     surface: AppColor.background,
-    onSurface: AppColor.purple,
-    background: AppColor.background,
-    onBackground: AppColor.yellow,
+    onSurface: AppColor.yellow,
+    background: AppColor.line,
+    onBackground: AppColor.purple,
     error: AppColor.background,
     onError: AppColor.red,
     brightness: Brightness.dark,

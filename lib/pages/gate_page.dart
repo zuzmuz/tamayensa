@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tamayensa/models/model.dart';
+import 'dart:async';
 import 'package:tamayensa/pages/vault_page.dart';
 import 'router.dart';
 import '../utils/app_theme.dart';
@@ -12,6 +13,16 @@ class GatePage extends StatefulWidget {
 }
 
 class GatePageState extends State<GatePage> {
+  int? _focusedIndex;
+  Timer? _timer;
+
+  @override
+  void dispose() {
+    // Cancel the timer when the widget is disposed
+    _timer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     print(MediaQuery.of(context).size);
@@ -37,13 +48,33 @@ class GatePageState extends State<GatePage> {
       body: ListView.builder(
         itemCount: vaults.length,
         itemBuilder: (context, index) {
-          return TextButton(
-            onPressed: () {
-              // context.toPage(() => VaultPage(vault: vaults[index]));
+          return ListTile(
+            title: Text(vaults[index].name),
+            onTap: () {
+              setState(() {
+                _focusedIndex = index;
+              });
             },
-            child: Text(vaults[index].name,
-                style: const TextStyle(color: AppColor.foreground)),
+            trailing: _focusedIndex == index
+                ? Container(
+                    width: 200,
+                    child: TextField(
+                      autofocus: true,
+                      obscureText: true,
+                      onChanged: (text) {
+                        _timer?.cancel();
+                        if (text == vaults[index].password) {
+                          _timer = Timer(const Duration(milliseconds: 2000), () {
+                            context
+                                .toPage(() => VaultPage(vault: vaults[index]));
+                          });
+                        }
+                      },
+                    ),
+                  )
+                : null,
           );
+          // context.toPage(() => VaultPage(vault: vaults[index]));
         },
       ),
     );
