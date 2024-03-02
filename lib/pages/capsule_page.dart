@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:logger/logger.dart';
 import 'package:tamayensa/models/model.dart';
 import 'router.dart';
+
+final Logger _logger = Logger();
 
 class CapsulePage extends StatelessWidget {
   final Capsule capsule;
@@ -43,8 +48,14 @@ class CapsulePage extends StatelessWidget {
             trailing: IconButton(
               icon: const Icon(Icons.copy),
               onPressed: () {
+                _logger.d('Copying to clipboard');
                 Clipboard.setData(
-                    ClipboardData(text: capsule.secrets[index].value));
+                  ClipboardData(text: capsule.secrets[index].value),
+                );
+                Timer(const Duration(seconds: 5), () {
+                  _logger.d('Clipboard cleared');
+                  Clipboard.setData(const ClipboardData(text: ''));
+                });
               },
             ),
           );

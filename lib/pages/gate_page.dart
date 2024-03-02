@@ -1,15 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:tamayensa/models/model.dart';
 import 'vault_page.dart';
 import 'router.dart';
 
-final _logger = Logger();
 
 class GatePage extends StatefulWidget {
   const GatePage({super.key});
-    
 
   @override
   GatePageState createState() => GatePageState();
@@ -35,49 +32,60 @@ class GatePageState extends State<GatePage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () {
-            },
+            onPressed: () {},
           ),
           IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: () {
-            },
+            onPressed: () {},
           ),
         ],
       ),
       body: ListView.builder(
         itemCount: vaults.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(vaults[index].name),
-            onTap: () {
-              setState(() {
-                _focusedIndex = index;
-              });
-            },
-            trailing: _focusedIndex == index
-                ? SizedBox(
-                    width: 200,
-                    child: TextField(
-                      autofocus: true,
-                      obscureText: true,
-                      onChanged: (text) {
-                        _timer?.cancel();
-                        if (text == vaults[index].password) {
-                          _timer = Timer(const Duration(milliseconds: 2000), () {
-                            context
-                                .toPage(() => VaultPage(vault: vaults[index]));
-                          });
-                        }
-                      },
-                    ),
-                  )
-                : null,
-          );
-          // context.toPage(() => VaultPage(vault: vaults[index]));
+          return buildListTile(context, index);
         },
       ),
     );
+  }
+
+  ListTile buildListTile(BuildContext context, int index) {
+    return ListTile(
+      title: buildListTileTitle(context, index, _focusedIndex == index),
+      onTap: () {
+        setState(() {
+          _focusedIndex = index;
+        });
+      },
+    );
+  }
+
+  Widget buildListTileTitle(BuildContext context, int index, bool focused) {
+    Text title = Text(vaults[index].name);
+    return focused
+        ? Row(
+            children: [
+              Expanded(child: title),
+              Expanded(
+                child: TextField(
+                  autofocus: true,
+                  obscureText: true,
+                  onChanged: (text) {
+                    _timer?.cancel();
+                    if (text == vaults[index].password) {
+                      _timer = Timer(
+                        const Duration(milliseconds: 2000),
+                        () {
+                          context.toPage(() => VaultPage(vault: vaults[index]));
+                        },
+                      );
+                    }
+                  },
+                ),
+              ),
+            ],
+          )
+        : title;
   }
 }
 
