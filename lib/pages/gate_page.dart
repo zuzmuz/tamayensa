@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:tamayensa/models/vault.dart';
+import 'package:tamayensa/models/model.dart';
 import 'package:tamayensa/pages/vault_page.dart';
 import 'router.dart';
 import '../utils/app_theme.dart';
 
-class GatePage extends CustomPage {
+class GatePage extends StatefulWidget {
   const GatePage({super.key});
 
   @override
+  GatePageState createState() => GatePageState();
+}
+
+class GatePageState extends State<GatePage> {
+  @override
   Widget build(BuildContext context) {
+    print(MediaQuery.of(context).size);
     return Scaffold(
-        appBar:
-            AppBar(title: const Text('Vaults'), centerTitle: true, actions: [
+      appBar: AppBar(
+        title: const Text('Vaults'),
+        centerTitle: true,
+        actions: [
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
@@ -24,23 +32,23 @@ class GatePage extends CustomPage {
               print('Settings button pressed');
             },
           ),
-        ]),
-        body: ListView.builder(
-            itemCount: vaults.length,
-            itemBuilder: (context, index) {
-              return TextButton(
-                onPressed: () {
-                  context.toPage(() => VaultPage(vault: vaults[index]));
-                },
-                child: Text(vaults[index].name,
-                    style: const TextStyle(color: AppColor.foreground)),
-              );
-            }));
+        ],
+      ),
+      body: ListView.builder(
+        itemCount: vaults.length,
+        itemBuilder: (context, index) {
+          return TextButton(
+            onPressed: () {
+              // context.toPage(() => VaultPage(vault: vaults[index]));
+            },
+            child: Text(vaults[index].name,
+                style: const TextStyle(color: AppColor.foreground)),
+          );
+        },
+      ),
+    );
   }
 }
-
-
-
 
 // import 'package:flutter/material.dart';
 
