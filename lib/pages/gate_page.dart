@@ -9,10 +9,10 @@ class GatePage extends StatefulWidget {
   const GatePage({super.key});
 
   @override
-  GatePageState createState() => GatePageState();
+  State<GatePage> createState() => _GatePageState();
 }
 
-class GatePageState extends State<GatePage> {
+class _GatePageState extends State<GatePage> {
   int? _focusedIndex;
   Timer? _timer;
 
@@ -74,7 +74,7 @@ class GatePageState extends State<GatePage> {
                     _timer?.cancel();
                     if (text == vaults[index].password) {
                       _timer = Timer(
-                        const Duration(milliseconds: 2000),
+                        const Duration(milliseconds: 500),
                         () {
                           context.toPage(() => VaultPage(vault: vaults[index]));
                         },
