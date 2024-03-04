@@ -4,7 +4,6 @@ import 'package:tamayensa/models/model.dart';
 import 'vault_page.dart';
 import 'router.dart';
 
-
 class GatePage extends StatefulWidget {
   const GatePage({super.key});
 

@@ -22,32 +22,48 @@ class SecretWidgetState extends State<SecretWidget> {
   SecretField? _focusedField;
   Secret? _editedSecret;
 
-  Widget _buildField(BuildContext context, String fieldValue,
-      bool fieldIsHidden, SecretField field) {
+  String correspondingField(SecretField field) {
+    switch (field) {
+      case SecretField.title:
+        return _editedSecret?.title ?? secret.title;
+      case SecretField.value:
+        return _editedSecret?.value ?? secret.value;
+    }
+  }
+
+  void setCorrespondingField(SecretField field, String value) {
+    _editedSecret ??= Secret(
+      title: secret.title,
+      value: secret.value,
+      isHidden: secret.isHidden,
+    );
+
+    switch (field) {
+      case SecretField.title:
+        _editedSecret!.title = value;
+        break;
+      case SecretField.value:
+        _editedSecret!.value = value;
+        break;
+    }
+  }
+
+  Widget _buildField(
+      BuildContext context, bool fieldIsHidden, SecretField field) {
     return _focusedField == field
         ? TextField(
             autofocus: true,
             obscureText: fieldIsHidden,
-            controller: TextEditingController(text: fieldValue),
+            controller: TextEditingController(text: correspondingField(field)),
             onChanged: (value) {
-              _editedSecret ??= Secret(
-                  title: secret.title,
-                  value: secret.value,
-                  isHidden: secret.isHidden);
-
-              switch (field) {
-                case SecretField.title:
-                  _editedSecret!.title = value;
-                  break;
-                case SecretField.value:
-                  _editedSecret!.value = value;
-                  break;
-              }
+              setCorrespondingField(field, value);
               widget.onSecretChanged?.call();
             },
           )
         : GestureDetector(
-            child: fieldIsHidden ? const Text('••••') : Text(fieldValue),
+            child: fieldIsHidden
+                ? const Text('••••')
+                : Text(correspondingField(field)),
             onDoubleTap: () {
               setState(() {
                 _focusedField = field;
@@ -62,11 +78,10 @@ class SecretWidgetState extends State<SecretWidget> {
     return ListTile(
       title: Row(children: [
         Expanded(
-          child: _buildField(context, secret.title, false, SecretField.title),
+          child: _buildField(context, false, SecretField.title),
         ),
         Expanded(
-          child: _buildField(
-              context, secret.value, secret.isHidden, SecretField.value),
+          child: _buildField(context, secret.isHidden, SecretField.value),
         ),
       ]),
       trailing: IconButton(

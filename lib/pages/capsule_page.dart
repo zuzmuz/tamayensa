@@ -15,19 +15,26 @@ class CapsulePage extends StatefulWidget {
 class _CapsulePageState extends State<CapsulePage> {
   Capsule get capsule => widget.capsule;
 
+  bool dirty = false;
   _CapsulePageState();
 
   @override
   Widget build(BuildContext context) {
     print("CapsulePage build");
     return Scaffold(
-      appBar: CapsuleAppBar(capsule: capsule, onSave: () {}),
+      appBar: CapsuleAppBar(
+        capsule: capsule,
+        onSave: () {},
+        dirty: dirty,
+      ),
       body: ListView.builder(
         itemCount: capsule.secrets.length,
         itemBuilder: (context, index) {
           return SecretWidget(
             secret: capsule.secrets[index],
-            onSecretChanged: () {},
+            onSecretChanged: () {
+              setState(() => dirty = true);
+            },
             onFocused: () {},
           );
         },
@@ -38,11 +45,12 @@ class _CapsulePageState extends State<CapsulePage> {
 
 class CapsuleAppBar extends AppBar {
   CapsuleAppBar(
-      {super.key, required this.capsule, required this.onSave, dirty = false})
-      : _dirty = dirty;
-  final bool _dirty;
-  bool get dirty => _dirty;
-  set dirty(bool value) {}
+      {super.key,
+      required this.capsule,
+      required this.onSave,
+      this.dirty = false});
+
+  final bool dirty;
   final Capsule capsule;
   final Function onSave;
   @override
