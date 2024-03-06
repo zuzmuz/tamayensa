@@ -3,10 +3,25 @@ import 'package:tamayensa/models/model.dart';
 import 'secret_widget.dart';
 import 'router.dart';
 
+class CapsuleObserver {
+  Function? _callbacks;
+
+  void observe(Function callback) {
+    print("adding callback");
+    _callbacks = callback;
+  }
+
+  void notify() {
+    print("notifying $_callbacks");
+    _callbacks?.call();
+  }
+}
+
 class CapsulePage extends StatefulWidget {
   final Capsule capsule;
+  final CapsuleObserver capsuleObserver = CapsuleObserver();
 
-  const CapsulePage({super.key, required this.capsule});
+  CapsulePage({super.key, required this.capsule});
 
   @override
   State<CapsulePage> createState() => _CapsulePageState();
@@ -15,26 +30,23 @@ class CapsulePage extends StatefulWidget {
 class _CapsulePageState extends State<CapsulePage> {
   Capsule get capsule => widget.capsule;
 
-  bool dirty = false;
   _CapsulePageState();
 
   @override
   Widget build(BuildContext context) {
-    print("CapsulePage build");
     return Scaffold(
       appBar: CapsuleAppBar(
         capsule: capsule,
+        capsuleObserver: widget.capsuleObserver,
         onSave: () {},
-        dirty: dirty,
       ),
       body: ListView.builder(
         itemCount: capsule.secrets.length,
         itemBuilder: (context, index) {
           return SecretWidget(
             secret: capsule.secrets[index],
-            onSecretChanged: () {
-              setState(() => dirty = true);
-            },
+            capsuleObserver: widget.capsuleObserver,
+            onSecretChanged: () {},
             onFocused: () {},
           );
         },
@@ -44,30 +56,29 @@ class _CapsulePageState extends State<CapsulePage> {
 }
 
 class CapsuleAppBar extends AppBar {
-  CapsuleAppBar(
-      {super.key,
-      required this.capsule,
-      required this.onSave,
-      this.dirty = false});
+  CapsuleAppBar({
+    super.key,
+    required this.capsule,
+    required this.capsuleObserver,
+    required this.onSave,
+  });
 
-  final bool dirty;
   final Capsule capsule;
+  final CapsuleObserver capsuleObserver;
   final Function onSave;
   @override
   State<CapsuleAppBar> createState() => _CapsuleAppBarState();
-
-  void onSecretChanged() {
-    print("onSecretChanged");
-  }
 }
 
+// TODO: the element passed to the widget should be an observable, that the state get and listens to, when the object changes
+// a callback is handled here to set the state of this object only
+
 class _CapsuleAppBarState extends State<CapsuleAppBar> {
-  Capsule get capsule => widget.capsule;
-  bool get dirty => widget.dirty;
+  bool _dirty = false;
 
   List<Widget> _buildActions(BuildContext context) {
     return [
-      dirty
+      _dirty
           ? IconButton(
               icon: const Icon(Icons.save),
               onPressed: () {
@@ -81,9 +92,9 @@ class _CapsuleAppBarState extends State<CapsuleAppBar> {
         icon: const Icon(Icons.add),
         onPressed: () {
           setState(() {
-            capsule.secrets.add(
-              Secret(title: "wala", value: "zala", isHidden: false),
-            );
+            // capsule.secrets.add(
+            //   Secret(title: "wala", value: "zala", isHidden: false),
+            // );
           });
         },
       ),
@@ -92,6 +103,12 @@ class _CapsuleAppBarState extends State<CapsuleAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    widget.capsuleObserver.observe(() {
+      print("notified");
+      setState(() {
+        _dirty = true;
+      });
+    });
     return AppBar(
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
@@ -99,7 +116,7 @@ class _CapsuleAppBarState extends State<CapsuleAppBar> {
           context.back();
         },
       ),
-      title: Text(capsule.name),
+      title: Text(widget.capsule.name),
       actions: _buildActions(context),
     );
   }

@@ -2,14 +2,21 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:tamayensa/models/model.dart';
+import 'package:tamayensa/pages/capsule_page.dart';
 
 class SecretWidget extends StatefulWidget {
   final Secret secret;
+  final CapsuleObserver capsuleObserver;
   final Function? onFocused;
   final Function? onSecretChanged;
 
-  const SecretWidget(
-      {super.key, required this.secret, this.onFocused, this.onSecretChanged});
+  const SecretWidget({
+    super.key,
+    required this.secret,
+    required this.capsuleObserver,
+    this.onFocused,
+    this.onSecretChanged,
+  });
 
   @override
   SecretWidgetState createState() => SecretWidgetState();
@@ -56,8 +63,8 @@ class SecretWidgetState extends State<SecretWidget> {
             obscureText: fieldIsHidden,
             controller: TextEditingController(text: correspondingField(field)),
             onChanged: (value) {
+              widget.capsuleObserver.notify();
               setCorrespondingField(field, value);
-              widget.onSecretChanged?.call();
             },
           )
         : GestureDetector(
