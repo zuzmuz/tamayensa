@@ -7,15 +7,11 @@ import 'package:tamayensa/pages/capsule_page.dart';
 class SecretWidget extends StatefulWidget {
   final Secret secret;
   final CapsuleObserver capsuleObserver;
-  final Function? onFocused;
-  final Function? onSecretChanged;
 
   const SecretWidget({
     super.key,
     required this.secret,
     required this.capsuleObserver,
-    this.onFocused,
-    this.onSecretChanged,
   });
 
   @override
@@ -63,7 +59,7 @@ class SecretWidgetState extends State<SecretWidget> {
             obscureText: fieldIsHidden,
             controller: TextEditingController(text: correspondingField(field)),
             onChanged: (value) {
-              widget.capsuleObserver.notify();
+              widget.capsuleObserver.modifiedCapsule.notify();
               setCorrespondingField(field, value);
             },
           )
@@ -72,9 +68,14 @@ class SecretWidgetState extends State<SecretWidget> {
                 ? const Text('••••')
                 : Text(correspondingField(field)),
             onDoubleTap: () {
+              widget.capsuleObserver.focusedSecret.notify();
+              widget.capsuleObserver.focusedSecret.observe(
+                () => setState(
+                  () => _focusedField = null,
+                ),
+              );
               setState(() {
                 _focusedField = field;
-                widget.onFocused?.call();
               });
             },
           );

@@ -1,20 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:tamayensa/models/model.dart';
+import 'package:tamayensa/utils/core.dart';
 import 'secret_widget.dart';
 import 'router.dart';
 
 class CapsuleObserver {
-  Function? _callbacks;
-
-  void observe(Function callback) {
-    print("adding callback");
-    _callbacks = callback;
-  }
-
-  void notify() {
-    print("notifying $_callbacks");
-    _callbacks?.call();
-  }
+  Observed focusedSecret = Observed();
+  Observed modifiedCapsule = Observed();
 }
 
 class CapsulePage extends StatefulWidget {
@@ -46,8 +38,6 @@ class _CapsulePageState extends State<CapsulePage> {
           return SecretWidget(
             secret: capsule.secrets[index],
             capsuleObserver: widget.capsuleObserver,
-            onSecretChanged: () {},
-            onFocused: () {},
           );
         },
       ),
@@ -69,9 +59,6 @@ class CapsuleAppBar extends AppBar {
   @override
   State<CapsuleAppBar> createState() => _CapsuleAppBarState();
 }
-
-// TODO: the element passed to the widget should be an observable, that the state get and listens to, when the object changes
-// a callback is handled here to set the state of this object only
 
 class _CapsuleAppBarState extends State<CapsuleAppBar> {
   bool _dirty = false;
@@ -103,8 +90,7 @@ class _CapsuleAppBarState extends State<CapsuleAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    widget.capsuleObserver.observe(() {
-      print("notified");
+    widget.capsuleObserver.modifiedCapsule.observe(() {
       setState(() {
         _dirty = true;
       });
