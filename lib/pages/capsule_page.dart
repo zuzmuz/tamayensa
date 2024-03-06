@@ -28,10 +28,17 @@ class _CapsulePageState extends State<CapsulePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CapsuleAppBar(
-        capsule: capsule,
-        capsuleObserver: widget.capsuleObserver,
-        onSave: () {},
-      ),
+          capsule: capsule,
+          capsuleObserver: widget.capsuleObserver,
+          onSave: () {},
+          onAdd: () {
+          print("here");
+            setState(() {
+              capsule.secrets.add(
+                Secret(title: "New Secret", value: "New Value"),
+              );
+            });
+          }),
       body: ListView.builder(
         itemCount: capsule.secrets.length,
         itemBuilder: (context, index) {
@@ -51,11 +58,13 @@ class CapsuleAppBar extends AppBar {
     required this.capsule,
     required this.capsuleObserver,
     required this.onSave,
+    required this.onAdd,
   });
 
   final Capsule capsule;
   final CapsuleObserver capsuleObserver;
   final Function onSave;
+  final Function onAdd;
   @override
   State<CapsuleAppBar> createState() => _CapsuleAppBarState();
 }
@@ -78,11 +87,7 @@ class _CapsuleAppBarState extends State<CapsuleAppBar> {
       IconButton(
         icon: const Icon(Icons.add),
         onPressed: () {
-          setState(() {
-            // capsule.secrets.add(
-            //   Secret(title: "wala", value: "zala", isHidden: false),
-            // );
-          });
+          widget.onAdd();
         },
       ),
     ];
