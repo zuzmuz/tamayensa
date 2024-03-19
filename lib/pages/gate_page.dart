@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tamayensa/models/model.dart';
+import 'google_page.dart';
 import 'vault_page.dart';
 import 'router.dart';
 
@@ -30,12 +31,14 @@ class _GatePageState extends State<GatePage> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: const Icon(Icons.settings),
             onPressed: () {},
           ),
           IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {},
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              context.toPage(() => const GooglePage());
+            },
           ),
         ],
       ),
@@ -53,7 +56,11 @@ class _GatePageState extends State<GatePage> {
       title: buildListTileTitle(context, index, _focusedIndex == index),
       onTap: () {
         setState(() {
-          _focusedIndex = index;
+          if (_focusedIndex == index) {
+            _focusedIndex = null;
+          } else {
+            _focusedIndex = index;
+          }
         });
       },
     );

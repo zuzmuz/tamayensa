@@ -27,5 +27,5 @@ final ThemeData appTheme = ThemeData(
     onError: AppColor.red,
     brightness: Brightness.dark,
   ),
-  fontFamily: 'SpaceMono',
+  fontFamily: 'RecMonoLinear',
 );

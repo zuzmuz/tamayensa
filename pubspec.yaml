@@ -35,7 +35,9 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
-  logger: ^2.0.2+1
+  logger: ^2.1.0
+  googleapis: any
+  google_sign_in: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -75,15 +77,15 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: SpaceMono
+    - family: RecMonoLinear
       fonts:
-        - asset: fonts/SpaceMono-Regular.ttf
-        - asset: fonts/SpaceMono-Bold.ttf
+        - asset: fonts/RecMonoLinear-Regular-1.085.ttf
+        - asset: fonts/RecMonoLinear-Bold-1.085.ttf
           weight: 700
-        - asset: fonts/SpaceMono-BoldItalic.ttf
+        - asset: fonts/RecMonoLinear-BoldItalic-1.085.ttf
           style: italic
           weight: 700
-        - asset: fonts/SpaceMono-Italic.ttf
+        - asset: fonts/RecMonoLinear-Italic-1.085.ttf
           style: italic
   #
   # For details regarding fonts from package dependencies,
